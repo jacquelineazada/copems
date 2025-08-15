@@ -282,7 +282,6 @@ export default {
 
 /* Avatars */
 .avatar-style {
-  font-weight: bold;
 }
 
 /* Search and Filter */
