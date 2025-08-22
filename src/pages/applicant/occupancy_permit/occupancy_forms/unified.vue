@@ -249,11 +249,25 @@
                 </div>
                 <div class="input-field">
                   <span>Street *</span>
-                  <input
-                    type="text"
+                  <select
                     v-model="formData.street"
-                    placeholder="Enter street"
-                  />
+                    :disabled="!formData.barangay || availableStreets.length === 0"
+                  >
+                    <option disabled value="">
+                      {{
+                        formData.barangay
+                          ? "Please select a street"
+                          : "Select a barangay first"
+                      }}
+                    </option>
+                    <option
+                      v-for="street in availableStreets"
+                      :key="street"
+                      :value="street"
+                    >
+                      {{ street }}
+                    </option>
+                  </select>
                 </div>
               </div>
               <div class="form-row form-row--grid">
@@ -294,7 +308,6 @@
               <div class="form-row-full-width mt-4">
                 <label class="section-label">Location of Project</label>
               </div>
-              <!-- Start of Modified Section -->
               <div class="form-row form-row--grid">
                 <div class="input-field">
                   <span>Lot No. *</span>
@@ -314,21 +327,38 @@
                 </div>
                 <div class="input-field">
                   <span>Barangay *</span>
-                  <input
-                    type="text"
-                    v-model="formData.step3.barangay"
-                    placeholder="Enter barangay"
-                  />
+                  <select v-model="formData.step3.barangay">
+                    <option disabled value="">Please select one</option>
+                    <option v-for="brgy in barangays" :key="brgy" :value="brgy">
+                      {{ brgy }}
+                    </option>
+                  </select>
                 </div>
               </div>
               <div class="form-row form-row--grid">
                 <div class="input-field">
                   <span>Street *</span>
-                  <input
-                    type="text"
+                  <select
                     v-model="formData.step3.street"
-                    placeholder="Enter street"
-                  />
+                    :disabled="
+                      !formData.step3.barangay || availableStreetsStep3.length === 0
+                    "
+                  >
+                    <option disabled value="">
+                      {{
+                        formData.step3.barangay
+                          ? "Please select a street"
+                          : "Select a barangay first"
+                      }}
+                    </option>
+                    <option
+                      v-for="street in availableStreetsStep3"
+                      :key="street"
+                      :value="street"
+                    >
+                      {{ street }}
+                    </option>
+                  </select>
                 </div>
                 <div class="input-field">
                   <span>City/Municipal *</span>
@@ -343,12 +373,10 @@
                   />
                 </div>
               </div>
-              <!-- End of Modified Section -->
             </div>
           </div>
           <div v-show="activeStep === 4" class="step-content">
             <div class="construction-form">
-              <!-- Start of Modified Section -->
               <div class="occupancy-grid">
                 <div class="occupancy-group-card">
                   <div class="group-title">GROUP A: RESIDENTIAL (DWELLINGS)</div>
@@ -600,7 +628,6 @@
                   ></VueDatePicker>
                 </div>
               </div>
-              <!-- End of Modified Section -->
             </div>
           </div>
           <div v-show="activeStep === 5" class="step-content">
@@ -672,6 +699,18 @@ export default {
         "Tinago",
         "Triangulo",
       ],
+      // This object holds street data for each barangay
+      streetsByBarangay: {
+        Calauag: ["Magsaysay Avenue", "Queborac Drive", "Basilica Road"],
+        Abella: ["Abella Street", "Almeda Highway", "CBD I"],
+        "Bagumbayan Sur": [
+          "Barlin Street",
+          "Blumentritt Street",
+          "M.T. Villanueva Avenue",
+        ],
+        Cararayan: ["Del Carmen Street", "San Isidro Road", "St. James Street"],
+        "San Felipe": ["Naga-San Felipe Road", "Peninsula Street", "Grandview Avenue"],
+      },
       formData: {
         // Step 1
         applicationNumber: null,
@@ -721,6 +760,30 @@ export default {
         step5: {},
       },
     };
+  },
+  computed: {
+    // Computed property for Step 2 streets
+    availableStreets() {
+      return this.streetsByBarangay[this.formData.barangay] || [];
+    },
+    // New computed property for Step 3 streets
+    availableStreetsStep3() {
+      return this.streetsByBarangay[this.formData.step3.barangay] || [];
+    },
+  },
+  watch: {
+    // Watcher for Step 2 barangay
+    "formData.barangay"(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.formData.street = ""; // Reset street selection
+      }
+    },
+    // New watcher for Step 3 barangay
+    "formData.step3.barangay"(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.formData.step3.street = ""; // Reset street selection for Step 3
+      }
+    },
   },
   methods: {
     handleNextButtonClick() {
@@ -772,10 +835,10 @@ export default {
 /* --- BASE & LAYOUT STYLES --- */
 .page-wrapper {
   background-color: #ffffff;
-  height: 100vh; /* MODIFIED: Set height to full viewport */
-  display: flex; /* MODIFIED: Use flexbox for layout */
-  flex-direction: column; /* MODIFIED: Stack children vertically */
-  overflow: hidden; /* MODIFIED: Prevent body from scrolling */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .input-field input,
 .input-field select,
@@ -934,7 +997,7 @@ export default {
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0;
-  flex-shrink: 0; /* MODIFIED: Prevent header from shrinking */
+  flex-shrink: 0;
 }
 .title-header-text {
   font-size: 22px;
@@ -944,18 +1007,22 @@ export default {
 .stepper-section {
   background-color: #f4f6f9;
   padding-bottom: 30px;
-  display: flex; /* MODIFIED: Use flexbox */
-  flex-direction: column; /* MODIFIED: Stack children */
-  flex-grow: 1; /* MODIFIED: Allow this section to fill vertical space */
-  overflow: hidden; /* MODIFIED: Hide overflow */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
 }
-.stepper-container {
-  max-width: 1600px;
+.stepper-content-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  flex-grow: 0; /* Change from 1 to 0 to stop it from growing */
+  height: 80vh; /* Set a specific height (e.g., 70% of the viewport height) */
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  display: flex; /* MODIFIED: Use flexbox */
-  flex-direction: column; /* MODIFIED: Stack children */
-  flex-grow: 1; /* MODIFIED: Allow to fill space */
-  overflow: hidden; /* MODIFIED: Hide overflow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-height: 0;
 }
 .stepper-card {
   background-color: transparent;
@@ -1023,18 +1090,16 @@ export default {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 30px;
-  flex-grow: 1; /* MODIFIED: Allow card to fill remaining space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   width: 100%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  min-height: 0; /* MODIFIED: Override previous min-height */
+  min-height: 0;
 }
 .step-content {
-  flex-grow: 1; /* MODIFIED: Make content area expand */
-  overflow-y: auto; /* MODIFIED: Add vertical scroll ONLY to this area */
-  padding-right: 15px; /* MODIFIED: Add space for the scrollbar */
+  flex-grow: 1;
+  overflow-y: hidden;
 }
 .stepper-buttons {
   display: flex;
@@ -1042,7 +1107,7 @@ export default {
   align-items: center;
   padding-top: 20px;
   border-top: 1px solid #eee;
-  flex-shrink: 0; /* MODIFIED: Prevent buttons from shrinking */
+  flex-shrink: 0;
 }
 
 /* --- SELECTABLE CARD STYLES (NEW) --- */

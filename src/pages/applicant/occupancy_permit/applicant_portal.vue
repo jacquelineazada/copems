@@ -17,7 +17,15 @@
           </div>
         </div>
 
-        <v-btn color="#2962FF" dark class="mt-auto download-btn">
+        <v-btn
+          color="#2962FF"
+          dark
+          large
+          block
+          class="mt-auto download-btn"
+          @click="downloadChecklist"
+        >
+          <v-icon left>mdi-download</v-icon>
           Download Complete Checklist
         </v-btn>
       </div>
@@ -81,45 +89,49 @@ export default {
         { text: "Upload building required documents" },
         { text: "Wait for your application status" },
       ],
-      // --- MODIFIED DATA FOR CARDS ---
       topCards: [
         {
-          icon: "mdi-pencil", // Changed from mdi-file-edit-outline
+          icon: "mdi-pencil",
           title: "Fill up Unified Application Form",
           buttonText: "Fill up Form",
-          color: "#4338CA", // Updated color
-          iconBg: "#E0E7FF", // Updated background color
+          color: "#4338CA",
+          iconBg: "#E0E7FF",
           to: "/unified",
         },
         {
-          icon: "mdi-download", // Changed from mdi-file-check-outline
+          icon: "mdi-download",
           title: "Select Required Completion Form",
           buttonText: "Select Completion Form",
-          color: "#9333EA", // Updated color
-          iconBg: "#F3E8FF", // Updated background color
+          color: "#9333EA",
+          iconBg: "#F3E8FF",
           to: "/completion-forms",
         },
         {
-          icon: "mdi-folder-outline", // Changed from mdi-upload-multiple
+          icon: "mdi-folder-outline",
           title: "Upload Requirements",
           buttonText: "Upload Documents",
-          color: "#2563EB", // Updated color
-          iconBg: "#DBEAFE", // Updated background color
+          color: "#2563EB",
+          iconBg: "#DBEAFE",
           to: "/upload",
         },
       ],
     };
   },
+  methods: {
+    downloadChecklist() {
+      const url =
+        "https://www2.naga.gov.ph/wp-content/uploads/2022/02/CC-5E-CEO-Securing-Certificate-of-Occupancy-Certificate-of-Use-Certificate-of-Operation.pdf";
+      window.open(url, "_blank");
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* The overall page background */
 .page-wrapper {
   background-color: #f4f6f9;
 }
 
-/* The v-app-bar now handles its own position and shadow */
 .page-header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
   padding: 0 16px;
@@ -130,7 +142,6 @@ export default {
   color: #37474f;
 }
 
-/* Styling for the navigation drawer and its content */
 .sidebar-drawer {
   border-right: none !important;
 }
@@ -140,7 +151,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  height: calc(100% - 32px); /* Full height with margin */
+  height: calc(100% - 32px);
   margin: 16px;
   padding: 24px;
 }
@@ -236,13 +247,12 @@ export default {
   color: #333;
   line-height: 1.4;
   min-height: 45px;
-  margin-bottom: 16px; /* Added margin for spacing */
+  margin-bottom: 16px;
 }
-/* --- MODIFIED BUTTON STYLE --- */
 .action-btn {
   text-transform: none;
-  font-weight: 600; /* Made font bolder */
-  font-size: 0.95rem; /* Adjusted font size */
+  font-weight: 600;
+  font-size: 0.95rem;
   width: 100%;
   max-width: 260px;
   border-radius: 8px;

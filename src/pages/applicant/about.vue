@@ -1,394 +1,341 @@
 <template>
-  <v-card flat>
-    <v-layout>
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false">
-        <v-list>
-          <v-list-item
-            prepend-avatar="https://scontent.fwnp1-1.fna.fbcdn.net/v/t39.30808-6/482007057_953929396944205_496784858672308185_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeF3X7hm2ckriTf1-Bb5gNwhfMhmxxDF2Z18yGbHEMXZnS_SYFwo5FDnvG3qtrlx9DhRLvapomr0MD-fhRgSmoPW&_nc_ohc=v8O88NzBvuUQ7kNvwFnBIh7&_nc_oc=AdkMqwh_xy2CJbS7bdcvKQthrGkxfIU0vCgrH2ZVbbBnA6Np0dbxXdNN6IXhypXv0kI&_nc_zt=23&_nc_ht=scontent.fwnp1-1.fna&_nc_gid=pAhEG4OR1_QrK2dAYVpnug&oh=00_AfVz-qWewbXd1nBdAknpRHuxBCTdvevhQHYe3h1PGBRWg&oe=68A378B4"
-            title="Jacqueline"
-          >
-            <template v-slot:append>
-              <v-btn
-                icon="mdi-chevron-left"
-                variant="text"
-                @click.stop="rail = !rail"
-              ></v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
-        <v-list density="compact" nav>
-          <v-list-item
-            prepend-icon="mdi-home-city"
-            title="Home"
-            value="home"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-office-building"
-            title="Building Permit"
-            value="building_permit"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-file-document-outline"
-            title="Occupancy Permit"
-            value="occupancy_permit"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-clipboard-list-outline"
-            title="Compliance Monitoring"
-            value="compliance_monitoring"
-          ></v-list-item>
-        </v-list>
-        <template v-slot:append>
-          <v-list density="compact" nav>
-            <v-list-item
-              prepend-icon="mdi-logout"
-              title="Logout"
-              value="logout"
-            ></v-list-item>
-          </v-list>
-        </template>
-      </v-navigation-drawer>
+  <v-app style="background-color: #f8f9fa">
+    <v-main class="d-flex align-center justify-center">
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="12" md="10" lg="8">
+            <v-card class="checklist-card" flat>
+              <v-card-title class="text-h5 font-weight-bold pa-6">
+                Electrical Works Checklist
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-card-text class="pa-6">
+                <div
+                  v-for="item in checklistItems"
+                  :key="item.id"
+                  class="checklist-item-row"
+                >
+                  <v-checkbox
+                    v-model="item.checked"
+                    hide-details
+                    class="flex-shrink-0 mr-4"
+                  ></v-checkbox>
+                  <div class="item-label">{{ item.label }}</div>
+                  <v-text-field
+                    v-model="item.remarks"
+                    density="compact"
+                    variant="outlined"
+                    label="Enter remarks..."
+                    hide-details
+                    class="remarks-field"
+                  ></v-text-field>
+                </div>
 
-      <v-main class="main-content">
-        <v-toolbar color="transparent" flat>
-          <v-toolbar-title class="toolbar-title"
-            >Occupancy Permit Applicant Details</v-toolbar-title
-          >
-        </v-toolbar>
+                <div class="mt-6">
+                  <v-checkbox
+                    v-model="others.checked"
+                    hide-details
+                    label="Others"
+                    color="primary"
+                  ></v-checkbox>
+                  <v-textarea
+                    v-model="others.details"
+                    class="mt-4"
+                    variant="outlined"
+                    label="Enter detailed structural assessment findings..."
+                    rows="4"
+                    no-resize
+                  ></v-textarea>
+                </div>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="success"
+                  variant="flat"
+                  size="large"
+                  @click="openConfirmDialog('PASSED')"
+                >
+                  <v-icon left>mdi-check</v-icon>
+                  Passed
+                </v-btn>
+                <v-btn
+                  color="error"
+                  variant="flat"
+                  size="large"
+                  class="ml-2"
+                  @click="openConfirmDialog('VIOLATION')"
+                >
+                  <v-icon left>mdi-close</v-icon>
+                  Violation
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
 
-        <v-container fluid class="content-wrapper">
-          <v-card class="header-card" flat>
-            <v-card-text class="d-flex align-center">
-              <v-avatar color="#3D71F2" size="56">
-                <span class="text-h5 font-weight-bold">JM</span>
-              </v-avatar>
-              <div class="ml-4">
-                <h1 class="header-title">Jm Deguzman</h1>
-                <p class="header-subtitle">
-                  jimdeguzman@gmail.com <br />
-                  BP-2023-000-001
+    <v-dialog v-model="confirmDialog" max-width="400px" persistent>
+      <v-card rounded="lg">
+        <v-card-title class="text-h6 font-weight-bold"> Confirm Action </v-card-title>
+        <v-card-text>
+          Are you sure you want to mark this inspection as {{ confirmActionType }}?
+        </v-card-text>
+        <v-card-actions class="pa-4">
+          <v-spacer></v-spacer>
+          <v-btn variant="outlined" @click="confirmDialog = false">Cancel</v-btn>
+          <v-btn color="success" variant="flat" @click="handleConfirm">Confirm</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="reportDialog" max-width="800px">
+      <v-card class="report-dialog-card">
+        <v-card-title class="d-flex align-center">
+          <span class="text-h6 font-weight-bold">Electrical Works Report</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="reportDialog = false" variant="text" size="small">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <div class="d-flex justify-space-between align-start mb-6">
+            <div>
+              <div class="report-info-label">Assigned Inspector</div>
+              <div class="report-info-value">Eng. Joyce Oberos</div>
+              <div class="report-info-label mt-3">Date of Inspection</div>
+              <div class="report-info-value">06/07/2025</div>
+            </div>
+            <v-chip
+              v-if="confirmActionType === 'PASSED'"
+              color="success"
+              variant="tonal"
+              label
+              >Passed</v-chip
+            >
+            <v-chip
+              v-if="confirmActionType === 'VIOLATION'"
+              color="error"
+              variant="tonal"
+              label
+              >Violation</v-chip
+            >
+          </div>
+
+          <div class="report-checklist">
+            <div v-if="confirmActionType === 'PASSED'">
+              <div
+                v-for="item in passedItems"
+                :key="item.id"
+                class="report-checklist-item"
+              >
+                <div class="report-checklist-title">{{ item.label }}</div>
+                <p class="report-checklist-desc">{{ item.description }}</p>
+              </div>
+              <div v-if="others.checked" class="report-checklist-item">
+                <div class="report-checklist-title">Others</div>
+                <p class="report-checklist-desc">
+                  Additional miscellaneous items or considerations have been reviewed.
                 </p>
               </div>
-              <v-spacer></v-spacer>
-              <v-chip size="default" color="#2563EB" variant="flat" class="status-chip">
-                <v-icon start size="small">mdi-wrench-check-outline</v-icon>
-                Building Inspection
-              </v-chip>
-            </v-card-text>
-          </v-card>
-
-          <v-row>
-            <v-col cols="12" lg="8">
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Applicant Information</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Applicant Name</div>
-                        <div class="info-value">Jm Deguzman</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Project Location</div>
-                        <div class="info-value">San Felipe, Deca II Naga City</div>
-                      </div>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Project Name</div>
-                        <div class="info-value">Commercial</div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Property Details</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Property Type</div>
-                        <div class="info-value">Commercial Building</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Floor Area</div>
-                        <div class="info-value">250 sq.m</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Property Address</div>
-                        <div class="info-value">
-                          456 Commercial Avenue, San Felipe, Deca II Naga City
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Building Use</div>
-                        <div class="info-value">Retail Store</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Number of Floors</div>
-                        <div class="info-value">2 Floors</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Lot Area</div>
-                        <div class="info-value">300 sq.m</div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Inspection Results</v-card-title>
-                <v-table class="inspection-table">
-                  <thead>
-                    <tr>
-                      <th class="text-left text-subtitle-2">Inspection Type</th>
-                      <th class="text-left text-subtitle-2">Status</th>
-                      <th class="text-left text-subtitle-2">Inspector Name</th>
-                      <th class="text-left text-subtitle-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="inspection in inspections" :key="inspection.type">
-                      <td>{{ inspection.type }}</td>
-                      <td>
-                        <v-chip
-                          :class="`status-chip-${inspection.status.toLowerCase()}`"
-                          label
-                          size="small"
-                        >
-                          {{ inspection.status }}
-                        </v-chip>
-                      </td>
-                      <td>{{ inspection.inspectorName }}</td>
-                      <td>
-                        <v-btn variant="text" size="small" color="#2563EB"
-                          >View Report</v-btn
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </v-card>
-            </v-col>
-
-            <v-col cols="12" lg="4">
-              <v-card class="section-card inspection-schedule-card" flat>
-                <v-card-title class="section-title">Inspection Schedule</v-card-title>
-                <v-card-text>
-                  <div class="d-flex justify-space-between align-center mb-4">
-                    <span class="info-label">Date:</span>
-                    <span class="info-value font-weight-medium">January 15, 2025</span>
-                  </div>
-                  <div class="d-flex justify-space-between align-center mb-4">
-                    <span class="info-label">Time:</span>
-                    <span class="info-value font-weight-medium">10:30am</span>
-                  </div>
-                  <div class="d-flex justify-space-between align-center">
-                    <span class="info-label">Inspection Status:</span>
-                    <v-chip size="default" color="warning" variant="tonal">
-                      <v-icon start size="small">mdi-clock-outline</v-icon>
-                      Pending Schedule
-                    </v-chip>
-                  </div>
-                </v-card-text>
-              </v-card>
-
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Quick Actions</v-card-title>
-                <v-card-text>
-                  <v-btn block color="success" size="large" variant="flat">
-                    <v-icon left>mdi-check-circle-outline</v-icon>
-                    Approve Schedule
-                  </v-btn>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
-    </v-layout>
-  </v-card>
+            </div>
+            <div v-if="confirmActionType === 'VIOLATION'">
+              <div class="report-checklist-title mb-2">Items with Violations:</div>
+              <div
+                v-for="item in violationItems"
+                :key="item.id"
+                class="report-checklist-item"
+              >
+                <div class="report-checklist-title violation">{{ item.label }}</div>
+              </div>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions class="pa-4">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" variant="flat" size="large">
+            <v-icon left>mdi-send</v-icon>
+            Submit Report
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export default {
   setup() {
-    const drawer = ref(true);
-    const rail = ref(true);
-
-    const inspections = ref([
+    // UPDATED: Checklist is now complete
+    const checklistItems = ref([
       {
-        type: "Architectural Works",
-        status: "Pending",
-        inspectorName: "Eng. Joyce Oberos",
+        id: 1,
+        label: "General Requirements",
+        description: "All general electrical requirements have been met.",
+        checked: false,
+        remarks: "",
       },
       {
-        type: "Civil/Structural Works",
-        status: "Pending",
-        inspectorName: "Eng. Roberto Martinez",
+        id: 2,
+        label: "General Wiring Method",
+        description:
+          "Preparations and assessments related to wiring have been addressed.",
+        checked: false,
+        remarks: "",
       },
       {
-        type: "Electrical Works",
-        status: "Pending",
-        inspectorName: "Eng. Bernadette Venosoza",
+        id: 3,
+        label: "Services, Feeders & Branch Circuits",
+        description:
+          "The necessary application for the building permit has been completed.",
+        checked: false,
+        remarks: "",
       },
       {
-        type: "Sanitary Plumbing Works",
-        status: "Pending",
-        inspectorName: "Eng. Andrew Villapane",
+        id: 4,
+        label: "Grounding & Bonding",
+        description: "All essential safety requirements have been met.",
+        checked: false,
+        remarks: "",
+      },
+      {
+        id: 5,
+        label: "Hazardous Locations",
+        description: "Identified structural hazards have been assessed and addressed.",
+        checked: false,
+        remarks: "",
+      },
+      {
+        id: 6,
+        label: "Special Occupanciess",
+        description: "Requirements for special occupancies have been reviewed and met.",
+        checked: false,
+        remarks: "",
+      },
+      {
+        id: 7,
+        label: "Swimming Pools & Related Installations",
+        description:
+          "Electrical systems for pools and related installations are compliant.",
+        checked: false,
+        remarks: "",
+      },
+      {
+        id: 8,
+        label: "Emergency & Standby Systems & Fire Pumps",
+        description: "Emergency systems and fire pumps are correctly installed.",
+        checked: false,
+        remarks: "",
       },
     ]);
 
+    const others = ref({
+      checked: true,
+      details: "",
+    });
+
+    const confirmDialog = ref(false);
+    const reportDialog = ref(false);
+    const confirmActionType = ref("");
+
+    const passedItems = computed(() => {
+      return checklistItems.value.filter((item) => item.checked);
+    });
+
+    const violationItems = computed(() => {
+      return checklistItems.value.filter((item) => !item.checked);
+    });
+
+    const openConfirmDialog = (actionType) => {
+      confirmActionType.value = actionType;
+      confirmDialog.value = true;
+    };
+
+    // UPDATED: Now handles both PASSED and VIOLATION
+    const handleConfirm = () => {
+      confirmDialog.value = false;
+      if (
+        confirmActionType.value === "PASSED" ||
+        confirmActionType.value === "VIOLATION"
+      ) {
+        reportDialog.value = true;
+      }
+    };
+
     return {
-      drawer,
-      rail,
-      inspections,
+      checklistItems,
+      others,
+      confirmDialog,
+      reportDialog,
+      confirmActionType,
+      passedItems,
+      violationItems,
+      openConfirmDialog,
+      handleConfirm,
     };
   },
 };
 </script>
 
 <style scoped>
-/* ===================================== */
-/* General Layout & Theme */
-/* ===================================== */
-.main-content {
-  background-color: #f8f9fa; /* Soft, light grey background */
+.checklist-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
 }
-.toolbar-title {
+.checklist-item-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.item-label {
+  flex: 1;
+  font-weight: 500;
+  color: #000000ff;
+}
+.remarks-field {
+  max-width: 350px;
+}
+.v-btn {
+  text-transform: none;
   font-weight: 600;
-  font-size: 1.2rem;
-  color: #344054;
-}
-.content-wrapper {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 24px 24px 24px;
 }
 
-/* ===================================== */
-/* Header Card */
-/* ===================================== */
-.header-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  border: 1px solid #eaecf0;
+/* Report Dialog Styles */
+.report-dialog-card {
+  border-radius: 12px !important;
 }
-.header-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #101828;
-  line-height: 1.2;
-}
-.header-subtitle {
+.report-info-label {
   color: #667085;
+  font-size: 0.8rem;
+}
+.report-info-value {
+  color: #101828;
+  font-weight: 500;
   font-size: 0.9rem;
 }
-.status-chip {
-  font-weight: 500;
-  color: #fff;
+.report-checklist-item {
+  margin-bottom: 1.5rem;
 }
-
-/* ===================================== */
-/* Section Cards */
-/* ===================================== */
-.section-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  border: 1px solid #eaecf0;
+.report-checklist-item:last-child {
+  margin-bottom: 0;
 }
-.section-title {
+.report-checklist-title {
   font-size: 1rem;
   font-weight: 600;
   color: #101828;
-  padding: 16px 24px 8px 24px;
+  margin-bottom: 4px;
 }
-.v-card-text {
-  padding: 8px 24px 16px 24px;
+.report-checklist-title.violation {
+  color: #d32f2f; /* Red color for violation titles */
 }
-.inspection-schedule-card {
-  background-color: #e3f2fd;
-}
-
-/* ===================================== */
-/* Information Blocks */
-/* ===================================== */
-.info-block {
-  margin-bottom: 1.25rem;
-}
-.info-block:last-child {
-  margin-bottom: 0;
-}
-.info-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #667085;
-  margin-bottom: 6px;
-}
-.info-value {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #344054;
-}
-
-/* ===================================== */
-/* Inspection Table */
-/* ===================================== */
-.inspection-table {
-  background-color: #ffffff;
-  border-radius: 12px;
-}
-
-.inspection-table thead {
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.inspection-table th {
-  font-weight: 600 !important;
-  color: #4a4a4a !important;
-  font-size: 0.8rem !important;
-}
-
-.inspection-table td {
-  font-weight: 400 !important;
-  color: #333333;
+.report-checklist-desc {
   font-size: 0.9rem;
-}
-
-.inspection-table tr:not(:last-child) td {
-  border-bottom: 1px solid #e0e0e0;
-}
-
-/* Status Chips */
-.status-chip-pending {
-  background-color: #fef9c3;
-  color: #c7ad00;
-  font-weight: 500;
-  border-radius: 16px;
-}
-.status-chip-approved {
-  background-color: #d1fae5;
-  color: #059669;
-  font-weight: 500;
-  border-radius: 16px;
-}
-.status-chip-rejected {
-  background-color: #fee2e2;
-  color: #ef4444;
-  font-weight: 500;
-  border-radius: 16px;
+  color: #475467;
+  line-height: 1.5;
 }
 </style>

@@ -20,6 +20,8 @@ import CompletionForms from "@/pages/applicant/occupancy_permit/completion_forms
 import cfei from "@/pages/applicant/occupancy_permit/occupancy_forms/cfei.vue";
 import coc from "@/pages/applicant/occupancy_permit/occupancy_forms/coc.vue";
 import mc from "@/pages/applicant/occupancy_permit/occupancy_forms/mc.vue";
+import upload from "@/pages/applicant/occupancy_permit/upload.vue";
+import StatusOne from "@/pages/applicant/occupancy_permit/statuses/status_one.vue";
 
 const routes = [
   {
@@ -69,6 +71,14 @@ const routes = [
       {
         path: "mc",
         component: mc,
+      },
+      {
+        path: "upload",
+        component: upload,
+      },
+      {
+        path: "StatusOne",
+        component: StatusOne,
       },
     ],
   },
