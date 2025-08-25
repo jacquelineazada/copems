@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 .page-wrapper {
-  background-color: #f4f6f9; /* Light grey background for the page */
+  background-color: #ffffff; /* Light grey background for the page */
   min-height: 100vh;
 }
 

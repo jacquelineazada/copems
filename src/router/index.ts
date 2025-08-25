@@ -22,6 +22,14 @@ import coc from "@/pages/applicant/occupancy_permit/occupancy_forms/coc.vue";
 import mc from "@/pages/applicant/occupancy_permit/occupancy_forms/mc.vue";
 import upload from "@/pages/applicant/occupancy_permit/upload.vue";
 import StatusOne from "@/pages/applicant/occupancy_permit/statuses/status_one.vue";
+import DataTable from "@/pages/admin/inspectors_schedule/data_table.vue";
+import ScheduleMix from "@/pages/admin/inspectors_schedule/schedule_mix.vue";
+import ScheduleApp from "@/pages/admin/inspectors_schedule/schedule_approved.vue";
+import ReportTable from "@/pages/admin/inspection_report/report_table.vue";
+import ReportPending from "@/pages/admin/inspection_report/report_pending.vue";
+import ReportPV from "@/pages/admin/inspection_report/report_pv.vue";
+import ReportApproved from "@/pages/admin/inspection_report/report_approved.vue";
+import AdminTable from "@/pages/admin/Administrative/admin_table.vue";
 
 const routes = [
   {
@@ -79,6 +87,38 @@ const routes = [
       {
         path: "StatusOne",
         component: StatusOne,
+      },
+      {
+        path: "DataTable",
+        component: DataTable,
+      },
+      {
+        path: "ScheduleMix",
+        component: ScheduleMix,
+      },
+      {
+        path: "ScheduleApp",
+        component: ScheduleApp,
+      },
+      {
+        path: "ReportTable",
+        component: ReportTable,
+      },
+      {
+        path: "ReportPending",
+        component: ReportPending,
+      },
+      {
+        path: "ReportPV",
+        component: ReportPV,
+      },
+      {
+        path: "ReportApproved",
+        component: ReportApproved,
+      },
+      {
+        path: "AdminTable",
+        component: AdminTable,
       },
     ],
   },

@@ -19,7 +19,15 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/admin/Administrative/admin_table': RouteRecordInfo<'/admin/Administrative/admin_table', '/admin/Administrative/admin_table', Record<never, never>, Record<never, never>>,
     '/admin/dashboard': RouteRecordInfo<'/admin/dashboard', '/admin/dashboard', Record<never, never>, Record<never, never>>,
+    '/admin/inspection_report/report_approved': RouteRecordInfo<'/admin/inspection_report/report_approved', '/admin/inspection_report/report_approved', Record<never, never>, Record<never, never>>,
+    '/admin/inspection_report/report_pending': RouteRecordInfo<'/admin/inspection_report/report_pending', '/admin/inspection_report/report_pending', Record<never, never>, Record<never, never>>,
+    '/admin/inspection_report/report_pv': RouteRecordInfo<'/admin/inspection_report/report_pv', '/admin/inspection_report/report_pv', Record<never, never>, Record<never, never>>,
+    '/admin/inspection_report/report_table': RouteRecordInfo<'/admin/inspection_report/report_table', '/admin/inspection_report/report_table', Record<never, never>, Record<never, never>>,
+    '/admin/inspectors_schedule/data_table': RouteRecordInfo<'/admin/inspectors_schedule/data_table', '/admin/inspectors_schedule/data_table', Record<never, never>, Record<never, never>>,
+    '/admin/inspectors_schedule/schedule_approved': RouteRecordInfo<'/admin/inspectors_schedule/schedule_approved', '/admin/inspectors_schedule/schedule_approved', Record<never, never>, Record<never, never>>,
+    '/admin/inspectors_schedule/schedule_mix': RouteRecordInfo<'/admin/inspectors_schedule/schedule_mix', '/admin/inspectors_schedule/schedule_mix', Record<never, never>, Record<never, never>>,
     '/applicant/about': RouteRecordInfo<'/applicant/about', '/applicant/about', Record<never, never>, Record<never, never>>,
     '/applicant/home': RouteRecordInfo<'/applicant/home', '/applicant/home', Record<never, never>, Record<never, never>>,
     '/applicant/login': RouteRecordInfo<'/applicant/login', '/applicant/login', Record<never, never>, Record<never, never>>,
