@@ -326,12 +326,16 @@
                 >Back</v-btn
               >
               <v-btn
+                v-if="activeStep < 3"
                 color="blue"
                 dark
                 @click="handleNextButtonClick"
-                :disabled="activeStep === 3"
                 >Next</v-btn
               >
+              <v-btn v-else color="blue" dark @click="downloadApplication">
+                <v-icon left>mdi-download</v-icon>
+                Download
+              </v-btn>
             </div>
           </div>
         </v-card>
@@ -411,6 +415,11 @@ export default {
     saveDraft() {
       console.log("Save draft clicked");
       alert("Draft saved!");
+    },
+    // NEW METHOD for the download button
+    downloadApplication() {
+      console.log("Download application clicked");
+      alert("Application downloaded!");
     },
     formatDate(date) {
       if (!date) return "N/A";

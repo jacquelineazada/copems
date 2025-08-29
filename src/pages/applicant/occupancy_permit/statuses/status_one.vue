@@ -1,21 +1,18 @@
 <template>
   <v-app class="page-wrapper">
-    <v-navigation-drawer app permanent width="350">
+    <v-navigation-drawer app v-model="drawer" width="350">
       <div class="sidebar-content">
         <h2 class="guide-title">Quick Guide</h2>
         <p class="guide-subtitle">Follow these steps to complete your application</p>
-
         <div class="stepper-container mt-8">
           <div v-for="(step, index) in steps" :key="index" class="step-item">
             <div class="step-circle">{{ index + 1 }}</div>
             <div class="step-text">{{ step.text }}</div>
           </div>
         </div>
-
         <v-btn color="#2962FF" dark class="mt-8 download-btn">
           Download Complete Checklist
         </v-btn>
-
         <v-spacer></v-spacer>
         <v-btn text class="logout-btn mt-6">
           <v-icon left>mdi-logout</v-icon>
@@ -24,23 +21,80 @@
       </div>
     </v-navigation-drawer>
 
-    <v-main>
-      <div class="main-content-wrapper">
-        <div class="page-header">
-          <v-icon class="me-3" color="#2962FF">mdi-office-building-outline</v-icon>
-          <span class="page-title">Occupancy Permit Application</span>
-          <v-spacer></v-spacer>
-          <v-badge bordered color="red" content="1" offset-x="10" offset-y="10">
+    <v-app-bar app color="white" flat class="app-bar-border">
+      <v-app-bar-nav-icon
+        class="d-lg-none"
+        @click="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+
+      <v-icon class="me-3" color="#2962FF">mdi-office-building-outline</v-icon>
+      <span class="page-title">Occupancy Permit Application</span>
+      <v-spacer></v-spacer>
+
+      <v-menu offset-y left nudge-bottom="10" min-width="350">
+        <template v-slot:activator="{ on, attrs }">
+          <v-badge
+            bordered
+            color="red"
+            :content="unreadNotificationsCount"
+            :value="unreadNotificationsCount > 0"
+            offset-x="10"
+            offset-y="10"
+            v-bind="attrs"
+            v-on="on"
+          >
             <v-btn icon>
               <v-icon>mdi-bell-outline</v-icon>
             </v-btn>
           </v-badge>
-          <div class="permit-info ms-4">
-            <span class="permit-label">Building Permit Number</span>
-            <span class="permit-id">BP-2025-0808-001</span>
-          </div>
-        </div>
+        </template>
 
+        <v-card>
+          <v-list dense>
+            <v-subheader>NOTIFICATIONS</v-subheader>
+            <v-list-item-group>
+              <div v-for="(notification, index) in notifications" :key="index">
+                <v-divider v-if="index > 0"></v-divider>
+                <v-list-item
+                  @click="markAsRead(notification)"
+                  :class="{ 'notification-read': notification.read }"
+                >
+                  <v-list-item-icon class="me-4">
+                    <v-avatar :color="notification.color" size="36">
+                      <v-icon dark>{{ notification.icon }}</v-icon>
+                    </v-avatar>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="notification.title"></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-text="notification.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-icon v-if="!notification.read" color="blue" small
+                      >mdi-circle</v-icon
+                    >
+                  </v-list-item-action>
+                </v-list-item>
+              </div>
+            </v-list-item-group>
+          </v-list>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text small color="primary" @click="markAllAsRead"
+              >Mark all as read</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-menu>
+      <div class="permit-info ms-4">
+        <span class="permit-label">Building Permit Number</span>
+        <span class="permit-id">#BP-2024-001732</span>
+      </div>
+    </v-app-bar>
+
+    <v-main>
+      <div class="main-content-wrapper">
         <div class="content-panel">
           <v-card class="application-info-card" outlined>
             <v-card-text class="d-flex align-center flex-wrap">
@@ -114,6 +168,31 @@ export default {
   name: "OccupancyPermitPage",
   data() {
     return {
+      // 3. Add a data property to control the sidebar's visibility
+      drawer: null,
+      notifications: [
+        {
+          icon: "mdi-file-document-outline",
+          color: "blue",
+          title: "Requirements Approved",
+          subtitle: "Your documents are now verified.",
+          read: false,
+        },
+        {
+          icon: "mdi-calendar-check",
+          color: "green",
+          title: "Inspection Scheduled",
+          subtitle: "Scheduled for Sept 5, 2024.",
+          read: true,
+        },
+        {
+          icon: "mdi-alert-circle-outline",
+          color: "orange",
+          title: "Payment Due",
+          subtitle: "Please settle your fees by tomorrow.",
+          read: true,
+        },
+      ],
       steps: [
         { text: "Fill up the Unified Application Form" },
         { text: "Select Ocompletion Forms" },
@@ -122,27 +201,27 @@ export default {
         { text: "Wait for your application status" },
       ],
       applicationInfo: {
-        id: "BP-2025-0808-001",
-        submissionDate: "January 15, 2024",
+        id: "#BP-2024-001732",
+        submissionDate: "August 29, 2024",
         type: "Full",
         status: "Submitted Application",
-        lastUpdated: "2 hours ago",
+        lastUpdated: "30 mins ago",
       },
       statusItems: [
         {
           icon: "mdi-check-circle",
           color: "#ffffff",
           title: "Submitted Application",
-          subtitle: "Application ID: BP-2025-0808-001",
+          subtitle: "Application ID: #BP-2024-001732",
           description:
-            "Submitted: January 15, 2024. Your application has been successfully submitted and is now in the review process.",
+            "Submitted: August 29, 2025. Your application has been successfully submitted and is now in the review process.",
           status: "Completed",
         },
         {
           icon: "mdi-file-document-outline",
           color: "#757575",
           title: "PDF Requirements Checking",
-          subtitle: "Application ID: BP-2025-0808-001",
+          subtitle: "Application ID: #BP-2024-001732",
           description:
             "Requirement checking will begin shortly. Your submitted requirements will be reviewed for completeness and accuracy.",
           status: "Not Started",
@@ -151,7 +230,7 @@ export default {
           icon: "mdi-home-search-outline",
           color: "#757575",
           title: "Building Inspection",
-          subtitle: "Application ID: BP-2025-0808-001",
+          subtitle: "Application ID: #BP-2024-001732",
           description:
             "Wait for your onsite inspection schedule once required documents are approved.",
           status: "Not Started",
@@ -160,7 +239,7 @@ export default {
           icon: "mdi-thumb-up-outline",
           color: "#757575",
           title: "Final Approval",
-          subtitle: "Application ID: BP-2025-0808-001",
+          subtitle: "Application ID: #BP-2024-001732",
           description:
             "Final approval and permit issuance will proceed after successful evaluation.",
           status: "Not Started",
@@ -168,29 +247,38 @@ export default {
       ],
     };
   },
+  computed: {
+    unreadNotificationsCount() {
+      return this.notifications.filter((n) => !n.read).length;
+    },
+  },
+  methods: {
+    markAsRead(notification) {
+      notification.read = true;
+    },
+    markAllAsRead() {
+      this.notifications.forEach((notification) => (notification.read = true));
+    },
+  },
 };
 </script>
 
 <style scoped>
+.notification-read {
+  opacity: 0.6;
+}
 .page-wrapper {
   background-color: #f4f6f9;
 }
 
-/* REMOVED: Styles for the top header */
+.app-bar-border {
+  border-bottom: 1px solid #e0e0e0 !important;
+}
 
 .main-content-wrapper {
   padding: 24px;
 }
 
-.page-header {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  margin-bottom: 24px;
-}
 .page-title {
   font-size: 1.25rem;
   font-weight: 600;
