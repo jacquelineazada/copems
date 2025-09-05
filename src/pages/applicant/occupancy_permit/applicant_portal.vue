@@ -17,14 +17,7 @@
           </div>
         </div>
 
-        <v-btn
-          color="#2962FF"
-          dark
-          large
-          block
-          class="mt-auto download-btn"
-          @click="downloadChecklist"
-        >
+        <v-btn color="#2962FF" dark class="mt-11 download-btn" @click="downloadChecklist">
           <v-icon left>mdi-download</v-icon>
           Download Complete Checklist
         </v-btn>

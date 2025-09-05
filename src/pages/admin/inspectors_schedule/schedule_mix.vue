@@ -1,22 +1,83 @@
 <template>
   <v-card flat>
-    <v-layout>
+    <v-layout style="height: 100vh">
+      <v-navigation-drawer v-model="drawer" permanent width="256">
+        <v-list density="compact" nav class="mt-4">
+          <v-list-subheader class="construction-permit-header">
+            <v-icon size="20" class="mr-4">mdi-office-building</v-icon>
+            Construction Permit
+          </v-list-subheader>
+          <v-list-item
+            prepend-icon="mdi-home-city"
+            title="Home"
+            value="home"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-office-building"
+            title="Building Permit"
+            value="building_permit"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-file-document-outline"
+            title="Occupancy Permit"
+            value="occupancy_permit"
+            class="active-nav-item mx-2"
+          ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-clipboard-list-outline"
+            title="Compliance Monitoring"
+            value="compliance_monitoring"
+          ></v-list-item>
+        </v-list>
+        <template v-slot:append>
+          <v-list density="compact" nav>
+            <v-list-item
+              prepend-icon="mdi-logout"
+              title="Logout"
+              value="logout"
+            ></v-list-item>
+          </v-list>
+        </template>
+      </v-navigation-drawer>
+
       <v-main class="main-content">
-        <v-toolbar color="transparent" flat>
+        <v-toolbar color="white" flat>
           <v-toolbar-title class="toolbar-title"
             >Building Inspection Details</v-toolbar-title
           >
+          <v-spacer></v-spacer>
+          <div class="d-flex align-center pr-4">
+            <v-btn icon class="mr-2">
+              <v-badge dot color="error">
+                <v-icon>mdi-bell-outline</v-icon>
+              </v-badge>
+            </v-btn>
+            <v-btn variant="text" class="pa-0" style="height: auto">
+              <div class="d-flex align-center">
+                <v-avatar size="40">
+                  <v-img
+                    src="https://i.pinimg.com/736x/fb/73/17/fb7317fec4ff12a1f12e9710dc898692.jpg"
+                    alt="Chrize Azada"
+                  />
+                </v-avatar>
+                <div class="ml-3 text-left">
+                  <div class="user-name">Chrize Azada</div>
+                  <div class="user-role">Administrative</div>
+                </div>
+              </div>
+            </v-btn>
+          </div>
         </v-toolbar>
 
         <v-container fluid class="content-wrapper">
           <v-card class="header-card" flat>
             <v-card-text class="d-flex align-center">
               <v-avatar color="#bbdefb" size="56">
-                <span class="text-h5 font-weight-bold">JM</span>
+                <span class="text-h5 font-weight-bold">JA</span>
               </v-avatar>
               <div class="ml-4">
-                <h1 class="header-title">Jm Deguzman</h1>
-                <p class="header-subtitle">jimdeguzman@gmail.com</p>
+                <h1 class="header-title">Jacqueline Azada</h1>
+                <p class="header-subtitle">jacqueline.azada@gmail.com/p></p>
                 <p class="header-subtitle">BP-2023-8888-001</p>
               </div>
               <v-spacer></v-spacer>
@@ -28,69 +89,7 @@
           </v-card>
 
           <v-row>
-            <v-col cols="12" lg="8">
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Applicant Information</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Applicant Name</div>
-                        <div class="info-value">Jm Deguzman</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Project Location</div>
-                        <div class="info-value">San Felipe, Deca II Naga City</div>
-                      </div>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Project Name</div>
-                        <div class="info-value">Commercial</div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Property Details</v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Property Type</div>
-                        <div class="info-value">Commercial Building</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Floor Area</div>
-                        <div class="info-value">250 sq.m</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Property Address</div>
-                        <div class="info-value">
-                          456 Commercial Avenue, San Felipe, Deca II Naga City
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <div class="info-block">
-                        <div class="info-label">Building Use</div>
-                        <div class="info-value">Retail Store</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Number of Floors</div>
-                        <div class="info-value">2 Floors</div>
-                      </div>
-                      <div class="info-block">
-                        <div class="info-label">Lot Area</div>
-                        <div class="info-value">300 sq.m</div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-
+            <v-col cols="12">
               <v-card class="section-card" flat>
                 <v-card-title class="section-title">Inspector Schedule</v-card-title>
                 <v-table class="inspector-table">
@@ -112,7 +111,11 @@
                       </td>
                       <td>Eng. Joyce Oberos</td>
                       <td>
-                        <v-btn color="#2563EB" variant="text" size="small"
+                        <v-btn
+                          color="#2563EB"
+                          variant="text"
+                          size="small"
+                          @click="showSummaryDialog"
                           >View Details</v-btn
                         >
                       </td>
@@ -173,37 +176,9 @@
                 </v-table>
               </v-card>
             </v-col>
-
-            <v-col cols="12" lg="4">
-              <v-card class="section-card" flat>
-                <v-card-title class="section-title">Inspection Schedule</v-card-title>
-                <v-card-text>
-                  <div class="summary-item">
-                    <span class="info-label">Date</span>
-                    <span class="info-value font-weight-medium">January 15,2025</span>
-                  </div>
-                  <div class="summary-item mt-4">
-                    <span class="info-label">Time</span>
-                    <span class="info-value">10:30am</span>
-                  </div>
-                  <div class="summary-item mt-4">
-                    <span class="info-label">Inspection Status</span>
-                    <v-chip
-                      size="small"
-                      color="warning"
-                      variant="tonal"
-                      class="status-chip"
-                    >
-                      Pending Schedule
-                    </v-chip>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
           </v-row>
         </v-container>
 
-        <!-- New "Inspector Details" pop-up -->
         <v-dialog v-model="inspectorDetailsDialog" max-width="500">
           <v-card>
             <v-card-title class="d-flex justify-space-between align-center">
@@ -235,7 +210,6 @@
           </v-card>
         </v-dialog>
 
-        <!-- The "New Inspector" reassign dialog from the previous version -->
         <v-dialog v-model="reassignDialog" max-width="500">
           <v-card>
             <v-card-title class="d-flex justify-space-between align-center">
@@ -245,7 +219,9 @@
               </v-btn>
             </v-card-title>
             <v-card-text>
-              <div class="reassign-label mb-2">{{ selectedInspectionType }}</div>
+              <div class="reassign-label mb-2">
+                {{ selectedInspectionType }}
+              </div>
               <v-select
                 label="Select Inspector"
                 :items="inspectors"
@@ -261,6 +237,58 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <v-dialog v-model="summaryDialog" max-width="500px">
+          <v-card class="summary-card">
+            <v-card-title class="summary-header">
+              <div class="d-flex align-center">
+                <v-icon color="#2563EB" class="mr-2">mdi-check-circle</v-icon>
+                <span>Schedule Summary</span>
+                <v-chip class="ml-4 status-chip-pending" label size="small"
+                  >Pending</v-chip
+                >
+              </div>
+              <v-btn icon @click="summaryDialog = false" size="small">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text class="pt-6 px-6 pb-6">
+              <v-row>
+                <v-col cols="12">
+                  <div class="summary-block">
+                    <div class="summary-label">Inspection Date</div>
+                    <div class="summary-value">January 15, 2025</div>
+                  </div>
+                  <div class="summary-block mt-4">
+                    <div class="summary-label">Inspection Time</div>
+                    <div class="summary-value">10:30 AM</div>
+                  </div>
+                  <div class="summary-block mt-4">
+                    <div class="summary-label">Architectural Works</div>
+                    <div class="summary-value">Eng. Joyce Oberos</div>
+                  </div>
+                  <div class="summary-block mt-4">
+                    <div class="summary-label">Civil/Structural Works</div>
+                    <div class="summary-value">Eng. Roberto Martinez</div>
+                  </div>
+                  <div class="summary-block mt-4">
+                    <div class="summary-label d-flex align-center">
+                      <span>Electrical Works</span>
+                      <v-chip class="ml-2 status-chip-approved" label size="small"
+                        >Approved</v-chip
+                      >
+                    </div>
+                    <div class="summary-value">Eng. Bernadette Veroza</div>
+                  </div>
+                  <div class="summary-block mt-4">
+                    <div class="summary-label">Sanitary Plumbing Works</div>
+                    <div class="summary-value">Eng. Andrew Villapane</div>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-main>
     </v-layout>
   </v-card>
@@ -271,8 +299,10 @@ import { ref } from "vue";
 
 export default {
   setup() {
+    const drawer = ref(true);
     const inspectorDetailsDialog = ref(false);
     const reassignDialog = ref(false);
+    const summaryDialog = ref(false);
     const selectedInspectionType = ref("");
     const selectedInspectorName = ref("");
     const inspectors = ref([
@@ -282,27 +312,32 @@ export default {
       "Eng. Andrew Villapane",
     ]);
 
-    // New function to show the initial pop-up with inspector details
     const showInspectorDetails = (inspectionType, inspectorName) => {
       selectedInspectionType.value = inspectionType;
       selectedInspectorName.value = inspectorName;
       inspectorDetailsDialog.value = true;
     };
 
-    // Function to open the reassign dialog from the details pop-up
     const showReassignDialog = () => {
-      inspectorDetailsDialog.value = false; // Close the first pop-up
-      reassignDialog.value = true; // Open the second pop-up
+      inspectorDetailsDialog.value = false;
+      reassignDialog.value = true;
+    };
+
+    const showSummaryDialog = () => {
+      summaryDialog.value = true;
     };
 
     return {
+      drawer,
       inspectorDetailsDialog,
       reassignDialog,
+      summaryDialog,
       selectedInspectionType,
       selectedInspectorName,
       inspectors,
       showInspectorDetails,
       showReassignDialog,
+      showSummaryDialog,
     };
   },
 };
@@ -313,17 +348,62 @@ export default {
 /* General Layout & Theme */
 /* ===================================== */
 .main-content {
-  background-color: #f8f9fa; /* Soft, light grey background */
-}
-.toolbar-title {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #344054;
+  background-color: #f8f9fa;
 }
 .content-wrapper {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 24px 24px 24px;
+  padding: 16px 24px 24px 24px;
+}
+
+/* ===================================== */
+/* Navigation Drawer */
+/* ===================================== */
+.v-navigation-drawer {
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+}
+.construction-permit-header {
+  color: #101828;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+.construction-permit-header .v-icon {
+  color: #2563eb !important;
+}
+.active-nav-item {
+  background-color: #a9c3fa6e;
+  color: rgb(58, 57, 57) !important;
+  border-radius: 4px;
+}
+.active-nav-item :deep(.v-icon) {
+  color: rgb(97, 97, 97) !important;
+}
+.v-list-item:hover {
+  background-color: transparent;
+}
+
+/* ===================================== */
+/* Header Toolbar */
+/* ===================================== */
+.toolbar-title {
+  padding-left: 16px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #344054;
+}
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #101828;
+}
+.user-role {
+  font-size: 0.8rem;
+  color: #667085;
 }
 
 /* ===================================== */
@@ -368,27 +448,6 @@ export default {
 }
 
 /* ===================================== */
-/* Information Blocks */
-/* ===================================== */
-.info-block {
-  margin-bottom: 1.25rem;
-}
-.info-block:last-child {
-  margin-bottom: 0;
-}
-.info-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #667085;
-  margin-bottom: 6px;
-}
-.info-value {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #344054;
-}
-
-/* ===================================== */
 /* Inspector Table */
 /* ===================================== */
 .inspector-table th {
@@ -409,41 +468,36 @@ export default {
 /* ===================================== */
 /* Status Chips */
 /* ===================================== */
-.status-chip-pending {
-  background-color: #fef9c3;
-  color: #f59e0b; /* A darker yellow for text */
-  font-weight: 500;
-  border-radius: 16px;
-}
-
-.status-chip-approved {
-  background-color: #d1fae5;
-  color: #059669; /* A darker green for text */
-  font-weight: 500;
-  border-radius: 16px;
-}
-
-.status-chip-rejected {
-  background-color: #fee2e2;
-  color: #ef4444; /* A darker red for text */
-  font-weight: 500;
-  border-radius: 16px;
-}
-
-/* ===================================== */
-/* Summary & Timeline (Now Inspection Schedule) */
-/* ===================================== */
-.summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .status-chip {
   font-weight: 500;
 }
+.status-chip-pending {
+  background-color: #fef9c3;
+  color: #f59e0b;
+  font-weight: 500;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  height: 22px;
+}
+.status-chip-approved {
+  background-color: #d1fae5;
+  color: #059669;
+  font-weight: 500;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  height: 22px;
+}
+.status-chip-rejected {
+  background-color: #fee2e2;
+  color: #ef4444;
+  font-weight: 500;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  height: 22px;
+}
 
 /* ===================================== */
-/* New Dialog Styles */
+/* Dialog Styles */
 /* ===================================== */
 .reassign-label {
   font-size: 1rem;
@@ -463,5 +517,32 @@ export default {
   font-size: 0.95rem;
   font-weight: 500;
   color: #344054;
+}
+
+/* ===================================== */
+/* Schedule Summary Dialog Styles */
+/* ===================================== */
+.summary-card {
+  border-radius: 12px !important;
+}
+.summary-header {
+  background-color: #eef2ff;
+  color: #312e81;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.summary-block .summary-label {
+  font-size: 0.875rem;
+  color: #667085;
+  margin-bottom: 4px;
+}
+.summary-block .summary-value {
+  font-size: 0.95rem;
+  color: #1f2937;
+  font-weight: 500;
 }
 </style>

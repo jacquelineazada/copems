@@ -71,7 +71,6 @@
         <v-card flat class="stepper-content-card">
           <div v-show="activeStep === 1" class="step-content">
             <div class="construction-form">
-              <!-- START OF INSTALLATION -->
               <div class="form-row-full-width">
                 <label class="section-label">START OF INSTALLATION</label>
               </div>
@@ -92,7 +91,6 @@
                 </div>
               </div>
 
-              <!-- OUTLETS/DEVICES/EQUIPMENTS -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">OUTLETS/DEVICES/EQUIPMENTS</label>
               </div>
@@ -123,7 +121,6 @@
                 </div>
               </div>
 
-              <!-- NO. OF EQUIPMENT WIRING DEVICES -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">NO. OF EQUIPMENT WIRING DEVICES</label>
               </div>
@@ -162,7 +159,6 @@
                 </div>
               </div>
 
-              <!-- TYPES OF INSTALLATION -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">TYPES OF INSTALLATION</label>
               </div>
@@ -195,7 +191,6 @@
                 </div>
               </div>
 
-              <!-- TYPES OF WIRING -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">TYPES OF WIRING</label>
               </div>
@@ -260,7 +255,6 @@
           </div>
           <div v-show="activeStep === 2" class="step-content">
             <div class="construction-form">
-              <!-- 1st Section -->
               <div class="form-row form-row--grid three-columns">
                 <div class="input-field">
                   <span>NUMBER OF STORIES</span>
@@ -276,7 +270,6 @@
                 </div>
               </div>
 
-              <!-- 2nd Section -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">ACTUAL COST</label>
               </div>
@@ -315,7 +308,6 @@
                 </div>
               </div>
 
-              <!-- 3rd Section -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">OTHER FEES</label>
               </div>
@@ -331,7 +323,6 @@
           </div>
           <div v-show="activeStep === 3" class="step-content">
             <div class="construction-form">
-              <!-- Loads to be Connected -->
               <div class="form-row-full-width">
                 <label class="section-label">LOADS TO BE CONNECTED</label>
               </div>
@@ -382,7 +373,6 @@
                 </div>
               </div>
 
-              <!-- Nature of Works -->
               <div class="form-row-full-width mt-5">
                 <label class="section-label">NATURE OF WORKS</label>
               </div>
@@ -426,12 +416,16 @@
                 >Back</v-btn
               >
               <v-btn
+                v-if="activeStep < 4"
                 color="blue"
                 dark
                 @click="handleNextButtonClick"
-                :disabled="activeStep === 4"
                 >Next</v-btn
               >
+              <v-btn v-else color="blue" dark @click="downloadApplication">
+                <v-icon left>mdi-download</v-icon>
+                Download
+              </v-btn>
             </div>
           </div>
         </v-card>
@@ -540,6 +534,11 @@ export default {
     saveDraft() {
       console.log("Save draft clicked");
       alert("Draft saved!");
+    },
+    // NEW METHOD
+    downloadApplication() {
+      console.log("Download application clicked");
+      alert("Application downloaded!");
     },
   },
 };

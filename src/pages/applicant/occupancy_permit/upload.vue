@@ -6,9 +6,8 @@
         <p>Please upload the required documents to proceed with your application</p>
       </div>
 
-      <v-row>
-        <!-- Construction Logbook Uploader -->
-        <v-col cols="12" md="4">
+      <v-row justify="center">
+        <v-col cols="12" md="8" lg="6">
           <div class="upload-box">
             <div class="upload-title">
               <v-icon color="red" left small>mdi-file-document</v-icon>
@@ -18,7 +17,13 @@
               This document must be signed by the contractor and the supervising
               professional as proof of actual construction activities.
             </div>
-            <v-card outlined class="file-drop-area" @click="triggerFileUpload('logbook')">
+
+            <v-card
+              v-if="!files.logbook"
+              outlined
+              class="file-drop-area"
+              @click="triggerFileUpload('logbook')"
+            >
               <v-icon size="48" color="grey lighten-1">mdi-cloud-upload-outline</v-icon>
               <div class="file-drop-text">Drop files here or click to browse</div>
               <div class="file-type-hint">PDF</div>
@@ -27,16 +32,21 @@
                 ref="logbook"
                 @change="handleFileUpload($event, 'logbook')"
                 hidden
+                accept=".pdf"
               />
             </v-card>
-            <div v-if="files.logbook" class="file-name-chip">
-              {{ files.logbook.name }}
-            </div>
-          </div>
-        </v-col>
 
-        <!-- As-built Plans Uploader -->
-        <v-col cols="12" md="4">
+            <v-card v-else outlined class="file-uploaded-card">
+              <div class="file-info">
+                <v-icon color="red" class="file-icon">mdi-file-pdf-box</v-icon>
+                <span class="file-name">{{ files.logbook.name }}</span>
+              </div>
+              <v-btn icon @click="removeFile('logbook')">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
+
           <div class="upload-box">
             <div class="upload-title">
               <v-icon color="red" left small>mdi-file-document</v-icon>
@@ -46,7 +56,13 @@
               Required only for projects with major changes or deviations from the
               approved building plans.
             </div>
-            <v-card outlined class="file-drop-area" @click="triggerFileUpload('plans')">
+
+            <v-card
+              v-if="!files.plans"
+              outlined
+              class="file-drop-area"
+              @click="triggerFileUpload('plans')"
+            >
               <v-icon size="48" color="grey lighten-1">mdi-cloud-upload-outline</v-icon>
               <div class="file-drop-text">Drop files here or click to browse</div>
               <div class="file-type-hint">PDF</div>
@@ -55,16 +71,21 @@
                 ref="plans"
                 @change="handleFileUpload($event, 'plans')"
                 hidden
+                accept=".pdf"
               />
             </v-card>
-            <div v-if="files.plans" class="file-name-chip">
-              {{ files.plans.name }}
-            </div>
-          </div>
-        </v-col>
 
-        <!-- Sketch of Location Uploader -->
-        <v-col cols="12" md="4">
+            <v-card v-else outlined class="file-uploaded-card">
+              <div class="file-info">
+                <v-icon color="red" class="file-icon">mdi-file-pdf-box</v-icon>
+                <span class="file-name">{{ files.plans.name }}</span>
+              </div>
+              <v-btn icon @click="removeFile('plans')">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
+
           <div class="upload-box">
             <div class="upload-title">
               <v-icon color="red" left small>mdi-file-document</v-icon>
@@ -74,7 +95,12 @@
               A simple drawing showing the project's location, nearby streets, and major
               landmarks.
             </div>
-            <v-card outlined class="file-drop-area" @click="triggerFileUpload('sketch')">
+            <v-card
+              v-if="!files.sketch"
+              outlined
+              class="file-drop-area"
+              @click="triggerFileUpload('sketch')"
+            >
               <v-icon size="48" color="grey lighten-1">mdi-cloud-upload-outline</v-icon>
               <div class="file-drop-text">Drop files here or click to browse</div>
               <div class="file-type-hint">PDF</div>
@@ -83,21 +109,28 @@
                 ref="sketch"
                 @change="handleFileUpload($event, 'sketch')"
                 hidden
+                accept=".pdf"
               />
             </v-card>
-            <div v-if="files.sketch" class="file-name-chip">
-              {{ files.sketch.name }}
-            </div>
+
+            <v-card v-else outlined class="file-uploaded-card">
+              <div class="file-info">
+                <v-icon color="red" class="file-icon">mdi-file-pdf-box</v-icon>
+                <span class="file-name">{{ files.sketch.name }}</span>
+              </div>
+              <v-btn icon @click="removeFile('sketch')">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
+
+          <div class="submit-section">
+            <v-btn color="primary" large @click="submitDocuments"> Submit </v-btn>
           </div>
         </v-col>
       </v-row>
-
-      <div class="submit-section">
-        <v-btn color="primary" large @click="submitDocuments"> Submit </v-btn>
-      </div>
     </v-container>
 
-    <!-- ++ Success Dialog (Pop-up) ++ -->
     <v-dialog v-model="dialog" persistent max-width="550px">
       <v-card class="dialog-card">
         <v-btn icon class="close-button" @click="closeDialog">
@@ -133,9 +166,9 @@
               Application Process
             </div>
             <p>
-              Your application will go through three main stages: verification of uploaded
-              plans, evaluation of verified plans, and final permit release. Each stage
-              will be reviewed by our technical team.
+              Your application will go through three main stages: checking of uploaded
+              documents, building inspection, and final permit release. Each stage will be
+              reviewed by our technical team.
             </p>
           </div>
 
@@ -149,8 +182,7 @@
             Back to home
           </v-btn>
           <div class="footer-note">
-            You can track your application status in your dashboard or contact support if
-            you have any questions.
+            You can track your application status in your dashboard.
           </div>
         </v-card-actions>
       </v-card>
@@ -183,6 +215,12 @@ export default {
         console.log(`File selected for ${fileType}:`, file.name);
       }
     },
+    // ++ NEW METHOD to remove a file ++
+    removeFile(fileType) {
+      this.files[fileType] = null;
+      // Reset the file input so the same file can be re-selected
+      this.$refs[fileType].value = "";
+    },
     submitDocuments() {
       if (!this.files.logbook) {
         alert("Construction Logbook is a required document.");
@@ -191,7 +229,7 @@ export default {
 
       // Generate a random reference number
       const randomPart = Math.floor(1000 + Math.random() * 9000);
-      this.referenceNumber = `#BP-2023-00${randomPart}`;
+      this.referenceNumber = `#BP-2024-00${randomPart}`;
 
       console.log("Submitting documents:", this.files);
       this.dialog = true; // Show the pop-up
@@ -207,23 +245,23 @@ export default {
 <style scoped>
 /* --- Main Page Styles --- */
 .page-wrapper {
-  background-color: #f4f6f9;
+  background-color: #ffffff;
   min-height: 100vh;
-  padding-top: 60px;
+  padding-top: 20px;
 }
 .main-content {
-  padding-top: 40px;
+  padding-top: 30px;
   padding-bottom: 60px;
 }
 .header-section {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 45px;
 }
 .header-section h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 12px;
+  font-size: 2.45rem;
+  font-weight: 500;
+  color: #00012e;
+  margin-bottom: 6px;
 }
 .header-section p {
   font-size: 1.1rem;
@@ -233,12 +271,12 @@ export default {
   margin: 0 auto;
 }
 .upload-box {
-  margin-bottom: 20px;
+  margin-bottom: 35px;
 }
 .upload-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
+  color: #000000;
   margin-bottom: 8px;
   text-align: left;
 }
@@ -247,50 +285,68 @@ export default {
   color: #6c757d;
   line-height: 1.5;
   margin-bottom: 16px;
-  min-height: 65px;
+  min-height: 45px; /* Adjusted min-height */
   text-align: left;
 }
 .file-drop-area {
-  border: 2px dashed #dce4e8;
+  border: 2px dashed #83838357;
   border-radius: 8px;
   padding: 40px 20px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #ffffff;
+  background-color: #f9fcff;
 }
 .file-drop-area:hover {
   background-color: #f8fafc;
 }
 .file-drop-text {
   margin-top: 12px;
-  color: #555;
+  color: #000000;
   font-weight: 500;
 }
 .file-type-hint {
   font-size: 0.8rem;
-  color: #aaa;
+  color: #b60000;
   margin-top: 4px;
 }
-.file-name-chip {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  margin-top: 12px;
-  display: inline-block;
-  text-align: left;
+
+.file-uploaded-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid #acacac;
+  border-radius: 8px;
+  background-color: #fcfcfc;
 }
+.file-info {
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Prevents long file names from breaking layout */
+}
+.file-icon {
+  margin-right: 12px;
+}
+.file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds '...' for very long file names */
+  font-size: 0.9rem;
+  color: #000000;
+  font-weight: 500;
+}
+/* ++ END of new styles ++ */
+
 .submit-section {
   text-align: right;
-  margin-top: 40px;
+  margin-top: 20px; /* Adjusted margin */
 }
 
 /* --- Dialog (Pop-up) Styles --- */
 .dialog-card {
-  padding: 28px;
-  border-radius: 12px !important;
+  padding: 18px;
+  border-radius: 25px !important;
 }
 .close-button {
   position: absolute;
@@ -299,28 +355,28 @@ export default {
 }
 .icon-container-success {
   width: 60px;
-  height: 60px;
+  height: 50px;
   border-radius: 50%;
-  background-color: #4caf50; /* Green success color */
+  background-color: #349137; /* Green success color */
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px auto;
 }
 .dialog-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #333;
+  color: #000000;
   margin-bottom: 12px;
 }
 .dialog-description {
   font-size: 1rem;
-  color: #6c757d;
-  line-height: 1.6;
-  margin-bottom: 24px;
+  color: #525658;
+  line-height: 1.2;
+  margin-bottom: 28px;
 }
 .status-section {
-  margin-bottom: 24px;
+  margin-bottom: 45px;
 }
 .status-header {
   display: flex;
@@ -330,8 +386,8 @@ export default {
   font-weight: 600;
 }
 .status-tag {
-  background-color: #e3f2fd;
-  color: #1e88e5;
+  background-color: hsl(210, 100%, 82%);
+  color: #1971c4;
   padding: 4px 10px;
   border-radius: 19px;
   font-size: 0.8rem;
@@ -339,9 +395,9 @@ export default {
 .status-progress-bar {
   display: flex;
   position: relative;
-  background-color: #e0e0e0;
-  height: 4px;
-  border-radius: 2px;
+  background-color: #d3d3d3;
+  height: 3px;
+  border-radius: 3px;
   margin: 0 8px; /* Add margin to prevent text touching edges */
 }
 .status-progress-bar::before {
@@ -351,18 +407,17 @@ export default {
   top: 0;
   height: 100%;
   width: 12.5%; /* Covers the first half of the first step */
-  background-color: #4caf50;
+  background-color: #76d649;
   border-radius: 2px;
 }
 .progress-step {
   font-size: 0.8rem;
-  color: #757575;
+  color: #7e7d7d;
   position: relative;
   width: 26%;
   padding-top: 29px;
   white-space: nowrap; /* Prevent text from wrapping */
 }
-/* ++ Fixes start here ++ */
 .progress-step:first-child {
   text-align: left;
 }
@@ -377,7 +432,6 @@ export default {
   text-align: center;
   transform: translateX(15%); /* Adjust position of 3rd item */
 }
-/* ++ Fixes end here ++ */
 
 .progress-step::before {
   content: "";
@@ -410,7 +464,7 @@ export default {
   background-color: #4caf50;
 }
 .info-box {
-  background-color: #e3f2fd;
+  background-color: #abdbff34;
   border-radius: 8px;
   padding: 16px;
   text-align: left;
@@ -418,19 +472,19 @@ export default {
 }
 .info-box-title {
   font-weight: 600;
-  color: #1e88e5;
-  margin-bottom: 8px;
+  color: #00427c;
+  margin-bottom: 9px;
   display: flex;
   align-items: center;
 }
 .info-box p {
   font-size: 0.9rem;
-  color: #424242;
+  color: #3d3b3b;
   line-height: 1.5;
   margin-bottom: 0;
 }
 .reference-section {
-  background-color: #f5f5f5;
+  background-color: #fffafa;
   padding: 12px;
   border-radius: 8px;
   font-size: 1rem;
@@ -444,7 +498,7 @@ export default {
 }
 .footer-note {
   font-size: 0.85rem;
-  color: #757575;
+  color: #707070;
   margin-top: 16px;
   text-align: center;
 }

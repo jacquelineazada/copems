@@ -1,10 +1,11 @@
 <template>
   <div class="page-wrapper">
+    <div class="title-card d-flex align-center">
+      <v-icon color="#0000cc" size="32" class="me-3">mdi-cog</v-icon>
+      <h2 class="title-header-text">Mechanical Certificate</h2>
+    </div>
+
     <div class="stepper-section">
-      <div class="title-card d-flex align-center">
-        <v-icon color="#0000cc" size="32" class="me-3">mdi-cog</v-icon>
-        <h2 class="title-header-text">Certificate of Completion</h2>
-      </div>
       <v-container fluid class="stepper-container">
         <v-card flat class="stepper-card">
           <div
@@ -432,30 +433,28 @@
                 >Back</v-btn
               >
               <v-btn
+                v-if="activeStep < 3"
                 color="blue"
                 dark
                 @click="handleNextButtonClick"
-                :disabled="activeStep === 3"
                 >Next</v-btn
               >
+              <v-btn v-else color="blue" dark @click="downloadApplication">
+                <v-icon left>mdi-download</v-icon>
+                Download
+              </v-btn>
             </div>
           </div>
         </v-card>
       </v-container>
     </div>
-    <br />
   </div>
 </template>
 
 <script>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-
+// Script section remains the same as your provided code
 export default {
   name: "CompletionCertificatePage",
-  components: {
-    VueDatePicker,
-  },
   data() {
     return {
       activeStep: 1,
@@ -529,21 +528,9 @@ export default {
       console.log("Save draft clicked");
       alert("Draft saved!");
     },
-    formatDate(date) {
-      if (!date) return "N/A";
-      const d = date instanceof Date ? date : new Date(date);
-      return d.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    },
-    formatCurrency(amount) {
-      if (amount === null || amount === undefined || isNaN(amount)) return "N/A";
-      return new Intl.NumberFormat("en-PH", {
-        style: "currency",
-        currency: "PHP",
-      }).format(amount);
+    downloadApplication() {
+      console.log("Download application clicked");
+      alert("Application downloaded!");
     },
   },
 };
@@ -553,9 +540,10 @@ export default {
 /* --- BASE & LAYOUT STYLES --- */
 .page-wrapper {
   background-color: #f4f6f9;
-  min-height: 100vh;
+  height: 100vh; /* Set a fixed height */
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent scrolling on the wrapper */
 }
 
 /* --- TITLE HEADER STYLES --- */
@@ -563,7 +551,7 @@ export default {
   background-color: #ffffff;
   padding: 20px 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevent the header from shrinking */
 }
 .title-header-text {
   font-size: 22px;
@@ -574,12 +562,12 @@ export default {
 /* --- STEPPER STYLES --- */
 .stepper-section {
   background-color: #f4f6f9;
-  padding-top: 20px;
   padding-bottom: 40px;
-  flex-grow: 1;
+  flex-grow: 1; /* Allow this section to fill remaining space */
+  overflow-y: auto; /* Enable scrolling only on this section */
 }
 .stepper-container {
-  max-width: 1700px; /* Increased max-width */
+  max-width: 1700px;
   width: 100%;
 }
 .stepper-card {

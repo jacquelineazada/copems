@@ -27,9 +27,15 @@ import ScheduleMix from "@/pages/admin/inspectors_schedule/schedule_mix.vue";
 import ScheduleApp from "@/pages/admin/inspectors_schedule/schedule_approved.vue";
 import ReportTable from "@/pages/admin/inspection_report/report_table.vue";
 import ReportPending from "@/pages/admin/inspection_report/report_pending.vue";
-import ReportPV from "@/pages/admin/inspection_report/report_pv.vue";
 import ReportApproved from "@/pages/admin/inspection_report/report_approved.vue";
 import AdminTable from "@/pages/admin/Administrative/admin_table.vue";
+import AdminPending from "@/pages/admin/Administrative/admin_pending.vue";
+import TableAdmin from "@/pages/admin/Administrative/table_admin.vue";
+import verified from "@/pages/admin/Administrative/verified.vue";
+import inspector from "@/pages/admin/inspector/inspector_login.vue";
+import architectural from "@/pages/admin/inspector/architectural/architectural_table.vue";
+import archireport from "@/pages/admin/inspector/architectural/report.vue";
+import electrical from "@/pages/admin/inspector/electrical/electrical_table.vue";
 
 const routes = [
   {
@@ -109,16 +115,36 @@ const routes = [
         component: ReportPending,
       },
       {
-        path: "ReportPV",
-        component: ReportPV,
-      },
-      {
         path: "ReportApproved",
         component: ReportApproved,
       },
       {
         path: "AdminTable",
         component: AdminTable,
+      },
+      {
+        path: "AdminPending",
+        component: AdminPending,
+      },
+      {
+        path: "TableAdmin",
+        component: TableAdmin,
+      },
+      {
+        path: "verified",
+        component: verified,
+      },
+      {
+        path: "inspector",
+        component: inspector,
+      },
+      {
+        path: "architectural",
+        component: architectural,
+      },
+      {
+        path: "electrical",
+        component: electrical,
       },
     ],
   },
