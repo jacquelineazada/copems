@@ -18,7 +18,7 @@
               </div>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary" block to="AdminTable"> View Dashboard </v-btn>
+              <v-btn color="primary" block to="TableAdmin"> View Dashboard </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -69,9 +69,7 @@
               </div>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary" block to="/building-inspector">
-                Manage Inspectors
-              </v-btn>
+              <v-btn color="primary" block to="inspector"> Manage Inspectors </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

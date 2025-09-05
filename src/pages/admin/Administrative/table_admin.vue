@@ -37,7 +37,7 @@
 
         <v-main>
           <v-toolbar color="white" flat>
-            <v-toolbar-title class="pl-4">Building Inspection Report</v-toolbar-title>
+            <v-toolbar-title class="pl-4">Occupancy Permit Applicants</v-toolbar-title>
             <v-spacer></v-spacer>
 
             <div class="d-flex align-center pr-4">
@@ -75,13 +75,13 @@
             </v-row>
             <v-row>
               <v-col cols="12" sm="6" md="3" v-for="(card, i) in dashboardCards" :key="i">
-                <v-card :class="['status-card-new', card.customClass]" flat>
+                <v-card class="status-card" :color="card.color">
                   <div class="d-flex justify-space-between align-center">
-                    <div class="flex-grow-1">
-                      <div class="card-label">{{ card.label }}</div>
-                      <div class="card-value">{{ card.value }}</div>
+                    <div>
+                      <div class="text-subtitle-1 text-white">{{ card.label }}</div>
+                      <div class="mt-2 card-number-total">{{ card.value }}</div>
                     </div>
-                    <v-icon size="36" :color="card.iconColor">{{ card.icon }}</v-icon>
+                    <v-icon size="48" color="#FFFFFF">{{ card.icon }}</v-icon>
                   </div>
                 </v-card>
               </v-col>
@@ -137,7 +137,7 @@
                       <tr>
                         <th class="text-left text-subtitle-2">Applicant Name</th>
                         <th class="text-left text-subtitle-2">Application Number</th>
-                        <th class="text-left text-subtitle-2">Inspection Date</th>
+                        <th class="text-left text-subtitle-2">Date Submitted</th>
                         <th class="text-left text-subtitle-2">Status</th>
                         <th class="text-left text-subtitle-2">Action</th>
                       </tr>
@@ -150,11 +150,10 @@
                         <td>
                           <v-avatar
                             size="36"
-                            class="mr-3"
+                            class="mr-2 avatar-style"
                             :style="{
                               backgroundColor: applicant.avatarBg,
                               color: applicant.avatarColor,
-                              fontWeight: 500,
                             }"
                           >
                             {{ applicant.initials }}
@@ -175,28 +174,27 @@
                         <td>
                           <v-btn
                             v-if="applicant.status === 'Pending'"
-                            :class="getStatusButtonClass(applicant.status)"
-                            size="small"
+                            color="#2563EB"
                             variant="text"
-                            to="ReportPending"
+                            size="small"
+                            to="AdminPending"
                           >
                             View Details
                           </v-btn>
                           <v-btn
-                            v-else-if="applicant.status === 'Passed'"
-                            :class="getStatusButtonClass(applicant.status)"
-                            size="small"
+                            v-else-if="applicant.status === 'Verified'"
+                            color="#065F46"
                             variant="text"
-                            to="ReportApproved"
+                            size="small"
+                            to="verified"
                           >
                             View Details
                           </v-btn>
                           <v-btn
-                            v-else-if="applicant.status === 'Violation'"
-                            :class="getStatusButtonClass(applicant.status)"
-                            size="small"
+                            v-else-if="applicant.status === 'Returned'"
+                            color="#991B1B"
                             variant="text"
-                            to="/violation-details"
+                            size="small"
                           >
                             View Details
                           </v-btn>
@@ -226,7 +224,7 @@ let intervalId = null;
 
 const searchQuery = ref("");
 const selectedStatus = ref("All");
-const statusOptions = ref(["All", "Pending", "Passed", "Violation"]);
+const statusOptions = ref(["All", "Pending", "Verified", "Returned"]);
 
 const applicants = ref([
   {
@@ -235,67 +233,63 @@ const applicants = ref([
     appNumber: "BP-2024-808123-T",
     date: "Jan 15, 2024",
     status: "Pending",
-    avatarBg: "#FEF3C7",
-    avatarColor: "#92400E",
+    avatarBg: "#bbdefb",
+    avatarColor: "#1e88e5",
   },
   {
     initials: "SG",
     name: "Sarah Geronimo",
     appNumber: "BP-2024-808234-T",
     date: "Jan 16, 2024",
-    status: "Passed",
-    avatarBg: "#D1FAE5",
-    avatarColor: "#065F46",
+    status: "Verified",
+    avatarBg: "#c8e6c9",
+    avatarColor: "#43a047",
   },
   {
     initials: "MP",
     name: "Michael Padilla",
     appNumber: "BP-2024-808345-T",
     date: "Jan 17, 2024",
-    status: "Violation",
-    avatarBg: "#FEE2E2",
-    avatarColor: "#991B1B",
+    status: "Returned",
+    avatarBg: "#ffcdd2",
+    avatarColor: "#e53935",
   },
 ]);
 
 const pendingCount = computed(
   () => applicants.value.filter((app) => app.status === "Pending").length
 );
-const passedCount = computed(
-  () => applicants.value.filter((app) => app.status === "Passed").length
+const verifiedCount = computed(
+  () => applicants.value.filter((app) => app.status === "Verified").length
 );
-const violationCount = computed(
-  () => applicants.value.filter((app) => app.status === "Violation").length
+const returnedCount = computed(
+  () => applicants.value.filter((app) => app.status === "Returned").length
 );
 
 const dashboardCards = computed(() => [
   {
     label: "Total Applicants",
     value: applicants.value.length,
+    color: "#2563EB",
     icon: "mdi-account-group-outline",
-    iconColor: "#FFFFFF",
-    customClass: "total-card",
   },
   {
     label: "Pending",
     value: pendingCount.value,
+    color: "#FBBF24",
     icon: "mdi-clock-outline",
-    iconColor: "#92400E",
-    customClass: "pending-card",
   },
   {
-    label: "Passed",
-    value: passedCount.value,
-    icon: "mdi-check-circle",
-    iconColor: "#065F46",
-    customClass: "passed-card",
+    label: "Verified",
+    value: verifiedCount.value,
+    color: "#34D399",
+    icon: "mdi-check-decagram-outline",
   },
   {
-    label: "Violation",
-    value: violationCount.value,
-    icon: "mdi-alert-circle",
-    iconColor: "#991B1B",
-    customClass: "violation-card",
+    label: "Returned",
+    value: returnedCount.value,
+    color: "#F87171",
+    icon: "mdi-arrow-u-left-top",
   },
 ]);
 
@@ -318,23 +312,10 @@ const getStatusChipClass = (status) => {
   switch (status) {
     case "Pending":
       return "status-chip-pending";
-    case "Passed":
-      return "status-chip-passed";
-    case "Violation":
-      return "status-chip-violation";
-    default:
-      return "";
-  }
-};
-
-const getStatusButtonClass = (status) => {
-  switch (status) {
-    case "Pending":
-      return "action-btn-pending";
-    case "Passed":
-      return "action-btn-passed";
-    case "Violation":
-      return "action-btn-violation";
+    case "Verified":
+      return "status-chip-verified";
+    case "Returned":
+      return "status-chip-returned";
     default:
       return "";
   }
@@ -359,7 +340,9 @@ onMounted(() => {
   updateTime();
   intervalId = setInterval(updateTime, 1000);
 });
-onUnmounted(() => clearInterval(intervalId));
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 </script>
 
 <style scoped>
@@ -371,6 +354,9 @@ onUnmounted(() => clearInterval(intervalId));
   transition: all 0.1s ease;
   font-weight: 500;
   color: #333;
+}
+.v-list-item:hover {
+  background-color: transparent;
 }
 .construction-permit-header {
   color: #101828;
@@ -397,6 +383,9 @@ onUnmounted(() => clearInterval(intervalId));
   background-color: #f8f9fa !important;
 }
 
+.v-toolbar {
+  color: #333;
+}
 .v-toolbar-title {
   padding-left: 16px;
   font-weight: 600;
@@ -421,34 +410,24 @@ onUnmounted(() => clearInterval(intervalId));
   color: #667085;
 }
 
-.status-card-new {
+.status-card {
   border-radius: 12px;
-  padding: 20px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  padding: 16px;
+  color: #fff;
 }
-.card-label {
-  font-size: 0.9rem;
-  font-weight: 500;
+.status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
 }
-.card-value {
-  font-size: 2rem;
+.card-number-total,
+.card-number-pending,
+.card-number-verified,
+.card-number-returned {
   font-weight: 700;
-  line-height: 2.2rem;
-}
-.total-card {
-  background-color: #2563eb;
-  color: #ffffff;
-}
-.pending-card {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-.passed-card {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-.violation-card {
-  background-color: #fee2e2;
-  color: #991b1b;
+  font-size: 2.1rem;
+  line-height: 2rem;
+  color: #fff;
 }
 
 .applicants-table {
@@ -460,43 +439,39 @@ onUnmounted(() => clearInterval(intervalId));
   background-color: #f5f5f5 !important;
 }
 .applicants-table td {
-  font-weight: 500;
+  font-weight: 400 !important;
   color: #333333;
-  vertical-align: middle;
 }
+
 .status-chip-pending {
-  background-color: #fef9c3 !important;
-  color: #a16207 !important;
-  border-radius: 16px !important;
-  border: none !important;
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 500;
+  border-radius: 16px;
 }
-.status-chip-passed {
-  background-color: #d1fae5 !important;
-  color: #065f46 !important;
-  border-radius: 16px !important;
-  border: none !important;
+.status-chip-verified {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-weight: 500;
+  border-radius: 16px;
 }
-.status-chip-violation {
-  background-color: #fee2e2 !important;
-  color: #991b1b !important;
-  border-radius: 16px !important;
-  border: none !important;
-}
-
-.action-btn-pending {
-  color: #3730a3 !important;
-}
-.action-btn-passed {
-  color: #065f46 !important;
-}
-.action-btn-violation {
-  color: #991b1b !important;
+.status-chip-returned {
+  background-color: #fee2e2;
+  color: #991b1b;
+  font-weight: 500;
+  border-radius: 16px;
 }
 
+.avatar-style {
+  font-weight: 400;
+}
+
+.v-text-field {
+  max-width: 450px;
+}
 .v-btn {
   font-weight: 500;
   text-transform: none;
-  border-radius: 6px;
 }
 .v-container {
   padding: 14px 32px;

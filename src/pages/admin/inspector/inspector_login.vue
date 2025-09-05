@@ -2,7 +2,7 @@
   <div class="page-wrapper d-flex align-center justify-center">
     <div class="login-container">
       <v-card class="login-card pa-8" width="400">
-        <div class="text-center mb-6">
+        <div class="text-center mb-4">
           <v-img
             src="https://www2.naga.gov.ph/wp-content/uploads/2022/05/Naga_City_Official_Seal-1.png"
             alt="LGU Seal"
@@ -16,7 +16,18 @@
           </h2>
         </div>
         <v-card-text class="pa-0">
-          <v-form>
+          <v-form @submit.prevent="handleLogin">
+            <label class="input-label">Role</label>
+            <v-select
+              v-model="selectedRole"
+              :items="roles"
+              placeholder="Select your role"
+              density="comfortable"
+              variant="outlined"
+              prepend-inner-icon="mdi-briefcase-outline"
+              class="mb-4"
+            ></v-select>
+
             <label class="input-label">Username</label>
             <v-text-field
               placeholder="Enter your username"
@@ -43,7 +54,14 @@
               >
             </div>
 
-            <v-btn block color="#2962FF" size="large" class="login-btn" to="about">
+            <v-btn
+              block
+              color="#2962FF"
+              size="large"
+              class="login-btn"
+              type="submit"
+              :disabled="!selectedRole"
+            >
               Sign In
             </v-btn>
           </v-form>
@@ -56,6 +74,45 @@
 <script>
 export default {
   name: "LoginPage",
+  data: () => ({
+    selectedRole: null, // To store the selected role
+    roles: [
+      "Architectural Works",
+      "Civil / Structural Works",
+      "Electrical Works",
+      "Sanitary Plumbing Works",
+    ],
+  }),
+  methods: {
+    handleLogin() {
+      // If no role is selected, do nothing. The button should be disabled anyway.
+      if (!this.selectedRole) {
+        return;
+      }
+
+      let route = "";
+      switch (this.selectedRole) {
+        case "Architectural Works":
+          route = "architectural";
+          break;
+        case "Civil / Structural Works":
+          route = "/civil-structural-works";
+          break;
+        case "Electrical Works":
+          route = "electrical";
+          break;
+        case "Sanitary Plumbing Works":
+          route = "/sanitary-plumbing-works";
+          break;
+        default:
+          // Fallback route if something goes wrong
+          route = "/dashboard";
+      }
+
+      // Use Vue Router to navigate to the designated page
+      this.$router.push(route);
+    },
+  },
 };
 </script>
 
